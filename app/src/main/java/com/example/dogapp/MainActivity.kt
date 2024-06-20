@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.dogapp.ui.screens.IntroScreen
 import com.example.dogapp.ui.theme.DogAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,6 +49,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
+            val navigationController = rememberNavController()
             val dogsUiState by viewModel.dogsByBreedList.collectAsState()
 
             DogAppTheme {
@@ -53,7 +57,18 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DogsScreen(viewModel::searchAllByBreed, dogsUiState)
+                    NavHost(
+                        navController = navigationController,
+                        startDestination = Routes.IntroScreen.name
+                        ) {
+                        composable(Routes.IntroScreen.name) {
+                            IntroScreen { navigationController.navigate(Routes.DogsScreen.name) }
+                        }
+                        composable(Routes.DogsScreen.name) {
+                            DogsScreen(viewModel::searchAllByBreed, dogsUiState)
+                        }
+
+                    }
                 }
             }
         }
