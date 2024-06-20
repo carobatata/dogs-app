@@ -23,7 +23,7 @@ object RestApiModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): APIService {
-        return retrofit.create(APIService::class.java)
+    fun provideApiService(retrofit: Retrofit): RestApiService {
+        return retrofit.create(RestApiService::class.java)
     }
 }

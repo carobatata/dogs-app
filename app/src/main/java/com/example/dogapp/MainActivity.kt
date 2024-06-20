@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun DogsScreen(onSearch: (String) -> Unit, dogsUiState: ResultUiState<DogResponse>) {
+fun DogsScreen(onSearch: (String) -> Unit, dogsUiState: ResultUiState<List<String>>) {
 
     var searchInput by remember { mutableStateOf("") }
 
@@ -93,14 +93,16 @@ fun DogsScreen(onSearch: (String) -> Unit, dogsUiState: ResultUiState<DogRespons
         }
         when (dogsUiState) {
             is ResultUiState.Success -> {
-                LazyVerticalGrid(columns = GridCells.Fixed(2),
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(dogsUiState.data.images.size) {
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(dogsUiState.data.size) {
                         AsyncImage(
-                            model = dogsUiState.data.images[it],
+                            model = dogsUiState.data[it],
                             contentDescription = "Dog image"
                         )
                     }
@@ -129,14 +131,11 @@ fun DogsScreenPreview() {
         DogsScreen(
             {},
             ResultUiState.Success(
-                DogResponse(
-                    "success",
-                    listOf(
-                        "https://images.dog.ceo/breeds/hound-afghan/n02088094_1003.jpg",
-                        "https://images.dog.ceo/breeds/hound-afghan/n02088094_10263.jpg",
-                        "https://images.dog.ceo/breeds/hound-afghan/n02088094_10715.jpg",
-                        "https://images.dog.ceo/breeds/hound-afghan/n02088094_10822.jpg"
-                    )
+                listOf(
+                    "https://images.dog.ceo/breeds/hound-afghan/n02088094_1003.jpg",
+                    "https://images.dog.ceo/breeds/hound-afghan/n02088094_10263.jpg",
+                    "https://images.dog.ceo/breeds/hound-afghan/n02088094_10715.jpg",
+                    "https://images.dog.ceo/breeds/hound-afghan/n02088094_10822.jpg"
                 )
             )
         )

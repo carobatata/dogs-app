@@ -13,9 +13,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DogViewModel @Inject constructor(private val repository: DogRepository) : ViewModel(){
 
-    private val _dogsByBreedList: MutableStateFlow<ResultUiState<DogResponse>> =
+    private val _dogsByBreedList: MutableStateFlow<ResultUiState<List<String>>> =
         MutableStateFlow(ResultUiState.Loading)
-    var dogsByBreedList: StateFlow<ResultUiState<DogResponse>> = _dogsByBreedList.asStateFlow()
+    var dogsByBreedList: StateFlow<ResultUiState<List<String>>> = _dogsByBreedList.asStateFlow()
 
 
     fun searchAllByBreed(breed: String) {
@@ -28,7 +28,7 @@ class DogViewModel @Inject constructor(private val repository: DogRepository) : 
                 if (response.isSuccess) {
                     val dogs = response.getOrNull()
                     if(dogs != null){
-                        _dogsByBreedList.value = ResultUiState.Success(dogs)
+                        _dogsByBreedList.value = ResultUiState.Success(dogs.images)
                     } else{
                         _dogsByBreedList.value = ResultUiState.SuccessButEmpty
                     }
@@ -40,6 +40,4 @@ class DogViewModel @Inject constructor(private val repository: DogRepository) : 
             }
         }
     }
-
-
 }

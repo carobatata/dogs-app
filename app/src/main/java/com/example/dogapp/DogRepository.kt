@@ -6,12 +6,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DogRepository @Inject constructor(private val api: APIService){
+class DogRepository @Inject constructor(private val restApi: RestApiService){
 
     suspend fun findAllByBreed(query: String): Result<DogResponse?> {
         return withContext(Dispatchers.IO) {
             try {
-                val call = api.getDogsByBreed(query)
+                val call = restApi.getDogsByBreed(query)
                 val response = call.execute()
 
                 when {

@@ -8,6 +8,6 @@ sealed interface ResultUiState<out T> {
 
     data object SuccessButEmpty : ResultUiState<Nothing>
 
-    data class Success(val data: DogResponse) : ResultUiState<DogResponse>
+    data class Success(val data: List<String>) : ResultUiState<List<String>>
 
 }
