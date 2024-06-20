@@ -36,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.dogapp.ui.screens.DogsScreen
 import com.example.dogapp.ui.screens.IntroScreen
 import com.example.dogapp.ui.theme.DogAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,88 +73,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun DogsScreen(onSearch: (String) -> Unit, dogsUiState: ResultUiState<List<String>>) {
-
-    var searchInput by remember { mutableStateOf("") }
-
-    Column(Modifier.padding(16.dp)) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            TextField(
-                value = searchInput,
-                onValueChange = { searchInput = it },
-                modifier = Modifier.weight(1f),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent
-                )
-            )
-            Spacer(modifier = Modifier.padding(8.dp))
-            OutlinedButton(
-                onClick = { onSearch(searchInput) },
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier.wrapContentWidth()
-            ) {
-                Text(text = "Search")
-            }
-
-
-        }
-        when (dogsUiState) {
-            is ResultUiState.Success -> {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(dogsUiState.data.size) {
-                        AsyncImage(
-                            model = dogsUiState.data[it],
-                            contentDescription = "Dog image"
-                        )
-                    }
-                }
-            }
-
-            is ResultUiState.Error -> {
-                Text(text = "Error")
-            }
-
-            is ResultUiState.Loading -> {
-                Text(text = "Loading")
-            }
-
-            is ResultUiState.SuccessButEmpty -> {
-                Text(text = "No dogs found")
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DogsScreenPreview() {
-    DogAppTheme {
-        DogsScreen(
-            {},
-            ResultUiState.Success(
-                listOf(
-                    "https://images.dog.ceo/breeds/hound-afghan/n02088094_1003.jpg",
-                    "https://images.dog.ceo/breeds/hound-afghan/n02088094_10263.jpg",
-                    "https://images.dog.ceo/breeds/hound-afghan/n02088094_10715.jpg",
-                    "https://images.dog.ceo/breeds/hound-afghan/n02088094_10822.jpg"
-                )
-            )
-        )
     }
 }
 
