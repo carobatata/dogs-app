@@ -1,5 +1,6 @@
 package com.example.dogapp
 
+import com.example.dogapp.api.BreedsResponse
 import com.example.dogapp.api.DogRepository
 import com.example.dogapp.api.DogResponse
 import com.example.dogapp.api.RestApiService
@@ -64,4 +65,41 @@ class DogRepositoryTest{
             assertEquals(Result.failure<Exception>(exception), result)
         }
     }
+
+    @Test
+    fun `should find all breeds`() {
+
+        val message = mapOf(
+            "hound" to emptyList(),
+            "pug" to emptyList(),
+            "labrador" to emptyList<String>()
+        )
+        val call = mockk<Call<BreedsResponse>>()
+
+        coEvery { restApi.getAllBreeds() } returns call
+        coEvery { call.execute() } returns Response.success(BreedsResponse(status = "success", message = message))
+
+        runBlocking {
+            val result = dogRepository.getAllBreeds()
+
+            assert(result.isSuccess)
+        }
+    }
+
+    @Test
+    fun `should return failure if error getting all breeds`() {
+
+        val call = mockk<Call<BreedsResponse>>()
+        val exception = Exception("Error getting breeds")
+
+        coEvery { restApi.getAllBreeds() } returns call
+        coEvery { call.execute() } throws exception
+
+        runBlocking {
+            val result = dogRepository.getAllBreeds()
+
+            assertEquals(Result.failure<Exception>(exception), result)
+        }
+    }
+
 }

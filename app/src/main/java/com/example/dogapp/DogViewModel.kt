@@ -15,9 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DogViewModel @Inject constructor(private val repository: DogRepository) : ViewModel(){
-
-    private val breeds = listOf("australian", "bulldog", "hound", "pug", "retriever", "setter", "sheepdog", "spaniel", "terrier", "wolfhound")
+class DogViewModel @Inject constructor(private val repository: DogRepository) : ViewModel() {
 
     private val _dogsByBreedList: MutableStateFlow<ResultUiState<List<String>>> =
         MutableStateFlow(ResultUiState.Start)
@@ -29,9 +27,9 @@ class DogViewModel @Inject constructor(private val repository: DogRepository) : 
     private val _searchInput = MutableStateFlow("")
     val searchInput = _searchInput.asStateFlow()
 
-    private val _breedsList = MutableStateFlow(breeds)
+    private val _breedsList = MutableStateFlow(getAllBreeds())
     val breedsList = searchInput.combine(_breedsList) { query, breeds ->
-        if(query.isBlank()) {
+        if (query.isBlank()) {
             return@combine breeds
         }
         breeds.filter { breed ->
@@ -67,9 +65,9 @@ class DogViewModel @Inject constructor(private val repository: DogRepository) : 
             try {
                 if (response.isSuccess) {
                     val dogs = response.getOrNull()
-                    if(dogs != null){
+                    if (dogs != null) {
                         _dogsByBreedList.value = ResultUiState.Success(dogs.images)
-                    } else{
+                    } else {
                         _dogsByBreedList.value = ResultUiState.SuccessButEmpty
                     }
                 } else {
@@ -79,5 +77,22 @@ class DogViewModel @Inject constructor(private val repository: DogRepository) : 
                 _dogsByBreedList.value = ResultUiState.Error
             }
         }
+    }
+
+    private fun getAllBreeds(): List<String> {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = repository.getAllBreeds()
+            try {
+                if (response.isSuccess) {
+                    val breeds = response.getOrNull()
+                    if (breeds != null) {
+                        _breedsList.value = breeds
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return emptyList()
     }
 }

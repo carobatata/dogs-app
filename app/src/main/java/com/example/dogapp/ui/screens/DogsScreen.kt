@@ -3,10 +3,7 @@ package com.example.dogapp.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -20,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,21 +60,15 @@ fun TheDogsScreen(
     breedsList: List<String>,
     dogsUiState: ResultUiState<List<String>>
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        SearchSection(
-            searchInput,
-            onSearchTextChange,
-            onSearchByBreed,
-            isSearchingByBreed,
-            onToggleSearch,
-            breedsList
-        )
-        Spacer(modifier = Modifier.padding(8.dp))
-    }
+
+    SearchSection(
+        searchInput,
+        onSearchTextChange,
+        onSearchByBreed,
+        isSearchingByBreed,
+        onToggleSearch,
+        breedsList
+    )
     DogsListSection(dogsUiState)
 
 }
@@ -128,7 +118,7 @@ fun DogsListSection(dogsUiState: ResultUiState<List<String>>) {
         is ResultUiState.Success -> {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().padding(top = 15.dp),
                 contentPadding = PaddingValues(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
