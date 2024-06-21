@@ -42,11 +42,18 @@ fun DogsScreen(
     val breedsList by viewModel.breedsList.collectAsState()
 
     Column(Modifier.padding(16.dp)) {
-        TheDogsScreen(searchInput, viewModel::onSearchTextChange, viewModel::searchAllByBreed, isSearchingByBreed, viewModel::onToggleSearch, breedsList, dogsUiState)
+        TheDogsScreen(
+            searchInput,
+            viewModel::onSearchTextChange,
+            viewModel::searchAllByBreed,
+            isSearchingByBreed,
+            viewModel::onToggleSearch,
+            breedsList,
+            dogsUiState
+        )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TheDogsScreen(
     searchInput: String,
@@ -62,35 +69,61 @@ fun TheDogsScreen(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        SearchSection(
+            searchInput,
+            onSearchTextChange,
+            onSearchByBreed,
+            isSearchingByBreed,
+            onToggleSearch,
+            breedsList
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+    }
+    DogsListSection(dogsUiState)
 
-        SearchBar(query = searchInput,
-            onQueryChange = onSearchTextChange,
-            onSearch = { onSearchByBreed(searchInput) },
-            active = isSearchingByBreed,
-            onActiveChange = { onToggleSearch() },
-            placeholder = { Text("Type the breed...") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Close",
-                    tint = Color.LightGray
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchSection(
+    searchInput: String,
+    onSearchTextChange: (String) -> Unit,
+    onSearchByBreed: (String) -> Unit,
+    isSearchingByBreed: Boolean,
+    onToggleSearch: () -> Unit,
+    breedsList: List<String>
+) {
+    SearchBar(query = searchInput,
+        onQueryChange = onSearchTextChange,
+        onSearch = { onSearchByBreed(searchInput) },
+        active = isSearchingByBreed,
+        onActiveChange = { onToggleSearch() },
+        placeholder = { Text("Type the breed...") },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Close",
+                tint = Color.LightGray
+            )
+        }
+    ) {
+
+        LazyColumn {
+            items(breedsList.size) {
+                Text(
+                    text = breedsList[it],
+                    modifier = Modifier.padding(8.dp),
                 )
-            }
-        ) {
-
-            LazyColumn {
-                items(breedsList.size) {
-                    Text(
-                        text = breedsList[it],
-                        modifier = Modifier.padding(8.dp),
-                    )
-                }
-
             }
 
         }
-        Spacer(modifier = Modifier.padding(8.dp))
+
     }
+}
+
+
+@Composable
+fun DogsListSection(dogsUiState: ResultUiState<List<String>>) {
     when (dogsUiState) {
         is ResultUiState.Success -> {
             LazyVerticalGrid(
