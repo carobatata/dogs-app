@@ -65,11 +65,7 @@ class DogViewModel @Inject constructor(private val repository: DogRepository) : 
             try {
                 if (response.isSuccess) {
                     val dogs = response.getOrNull()
-                    if (dogs != null) {
-                        _dogsByBreedList.value = ResultUiState.Success(dogs.images)
-                    } else {
-                        _dogsByBreedList.value = ResultUiState.SuccessButEmpty
-                    }
+                    if (dogs != null) _dogsByBreedList.value = ResultUiState.Success(dogs.images)
                 } else {
                     _dogsByBreedList.value = ResultUiState.Error
                 }
