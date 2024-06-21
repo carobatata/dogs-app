@@ -28,10 +28,6 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val navigationController = rememberNavController()
-            val dogsUiState by viewModel.dogsByBreedList.collectAsState()
-            val searchInput by viewModel.searchInput.collectAsState()
-            val isSearchingByBreed by viewModel.isSearchingByBreed.collectAsState()
-            val breedsList by viewModel.breedsList.collectAsState()
 
             DogAppTheme {
                 Surface(
@@ -46,7 +42,7 @@ class MainActivity : ComponentActivity() {
                             IntroScreen { navigationController.navigate(Routes.DogsScreen.name) }
                         }
                         composable(Routes.DogsScreen.name) {
-                            DogsScreen(viewModel::searchAllByBreed, dogsUiState, searchInput, isSearchingByBreed , breedsList, viewModel::onSearchTextChange, viewModel::onToggleSearch)
+                            DogsScreen()
                         }
 
                     }

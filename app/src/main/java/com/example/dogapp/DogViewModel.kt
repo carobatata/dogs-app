@@ -17,7 +17,6 @@ import javax.inject.Inject
 @HiltViewModel
 class DogViewModel @Inject constructor(private val repository: DogRepository) : ViewModel(){
 
-
     private val breeds = listOf("australian", "bulldog", "hound", "pug", "retriever", "setter", "sheepdog", "spaniel", "terrier", "wolfhound")
 
     private val _dogsByBreedList: MutableStateFlow<ResultUiState<List<String>>> =

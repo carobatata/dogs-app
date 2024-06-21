@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     kapt("com.google.dagger:hilt-compiler:2.51.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     implementation(libs.androidx.material3)
     testImplementation("junit:junit:4.13.2")
