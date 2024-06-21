@@ -68,11 +68,7 @@ fun IntroScreen(onNavigateToDogsScreen: () -> Unit) {
                 modifier = Modifier.padding(8.dp)
             )
         }
-
-
     }
-
-
 }
 
 @Preview(showBackground = true)

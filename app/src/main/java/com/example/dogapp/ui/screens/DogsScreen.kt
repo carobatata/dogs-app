@@ -8,17 +8,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,10 +30,17 @@ import coil.compose.AsyncImage
 import com.example.dogapp.ResultUiState
 import com.example.dogapp.ui.theme.DogAppTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DogsScreen(onSearch: (String) -> Unit, dogsUiState: ResultUiState<List<String>>) {
-
-    var searchInput by remember { mutableStateOf("") }
+fun DogsScreen(
+    onSearch: (String) -> Unit,
+    dogsUiState: ResultUiState<List<String>>,
+    searchInput: String,
+    isSearchingByBreed: Boolean,
+    breedsList: List<String>,
+    onSearchTextChange: (String) -> Unit,
+    onToggleSearch: () -> Unit
+) {
 
     Column(Modifier.padding(16.dp)) {
         Row(
@@ -41,23 +48,34 @@ fun DogsScreen(onSearch: (String) -> Unit, dogsUiState: ResultUiState<List<Strin
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            TextField(
-                value = searchInput,
-                onValueChange = { searchInput = it },
-                modifier = Modifier.weight(1f),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent
-                )
-            )
-            Spacer(modifier = Modifier.padding(8.dp))
-            OutlinedButton(
-                onClick = { onSearch(searchInput) },
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier.wrapContentWidth()
+
+            SearchBar(query = searchInput,
+                onQueryChange = onSearchTextChange,
+                onSearch = { onSearch(searchInput) },
+                active = isSearchingByBreed,
+                onActiveChange = { onToggleSearch() },
+                placeholder = { Text("Type the breed...") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Close",
+                        tint = Color.LightGray
+                    )
+                }
             ) {
-                Text(text = "Search")
+
+                LazyColumn {
+                    items(breedsList.size) {
+                        Text(
+                            text = breedsList[it],
+                            modifier = Modifier.padding(8.dp),
+                        )
+                    }
+
+                }
+
             }
+            Spacer(modifier = Modifier.padding(8.dp))
         }
         when (dogsUiState) {
             is ResultUiState.Success -> {
@@ -90,6 +108,7 @@ fun DogsScreen(onSearch: (String) -> Unit, dogsUiState: ResultUiState<List<Strin
             }
 
             ResultUiState.Start -> {}
+            else -> {}
         }
     }
 }
@@ -107,7 +126,11 @@ fun DogsScreenPreview() {
                     "https://images.dog.ceo/breeds/hound-afghan/n02088094_10715.jpg",
                     "https://images.dog.ceo/breeds/hound-afghan/n02088094_10822.jpg"
                 )
-            )
-        )
+            ),
+            "",
+            false,
+            listOf("hound", "bulldog", "pug"),
+            { }
+        ) { }
     }
 }
