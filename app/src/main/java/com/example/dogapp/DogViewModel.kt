@@ -2,6 +2,7 @@ package com.example.dogapp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.dogapp.api.DogRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,11 +15,13 @@ import javax.inject.Inject
 class DogViewModel @Inject constructor(private val repository: DogRepository) : ViewModel(){
 
     private val _dogsByBreedList: MutableStateFlow<ResultUiState<List<String>>> =
-        MutableStateFlow(ResultUiState.Loading)
+        MutableStateFlow(ResultUiState.Start)
     var dogsByBreedList: StateFlow<ResultUiState<List<String>>> = _dogsByBreedList.asStateFlow()
 
 
     fun searchAllByBreed(breed: String) {
+
+        _dogsByBreedList.value = ResultUiState.Loading
 
         viewModelScope.launch(Dispatchers.IO) {
 

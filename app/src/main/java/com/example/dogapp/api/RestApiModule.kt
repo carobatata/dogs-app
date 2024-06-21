@@ -1,4 +1,4 @@
-package com.example.dogapp
+package com.example.dogapp.api
 
 import dagger.Module
 import dagger.Provides

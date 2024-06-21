@@ -88,6 +88,8 @@ fun DogsScreen(onSearch: (String) -> Unit, dogsUiState: ResultUiState<List<Strin
             is ResultUiState.SuccessButEmpty -> {
                 Text(text = "No dogs found")
             }
+
+            ResultUiState.Start -> {}
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.example.dogapp
 
+import com.example.dogapp.api.DogRepository
+import com.example.dogapp.api.DogResponse
+import com.example.dogapp.api.RestApiService
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.InjectMockKs

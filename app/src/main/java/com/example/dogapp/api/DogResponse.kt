@@ -1,4 +1,4 @@
-package com.example.dogapp
+package com.example.dogapp.api
 
 import com.google.gson.annotations.SerializedName
 
